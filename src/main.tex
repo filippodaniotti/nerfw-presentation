@@ -59,6 +59,89 @@
     \tableofcontents[sectionstyle=show,subsectionstyle=show/shaded/hide,subsubsectionstyle=show/shaded/hide]
 \end{frame}
 
+\section{Introduction}
+\begin{frame}{Introduction}
+    Content:
+    \begin{itemize}
+        \item problem statement
+        \item NeRF
+        \item NeRF in the Wild
+    \end{itemize}
+\end{frame}
 
+\section{The Problem}
+\begin{frame}
+    \begin{itemize}
+        \item synthesizing novel views of a scene from a sparse set of captured images
+        \item doing it in unconstrained environment:
+        \begin{itemize}
+            \item scene varies amongst training set (illumination, shading, tone)
+            \item scene is partially occluded by obstacles
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\section{Background: NeRF}
+\begin{frame}{Neural Radiance Fields}
+    \begin{block}{In a nutshell}
+        Pick a \(F_\Theta\) MLP and make it overfit so the desired scene is encoded within its weights\\\(\rightarrow\) one trained model represents only one scene!
+    \end{block}
+    \begin{equation*}
+        F_\Theta : (\vb{x}, \vb{d}) \rightarrow (\vb{c}, \sigma)
+    \end{equation*}
+    \begin{itemize}
+        \item inputs (obtained from structure-from-motion techniques)
+        \begin{itemize}
+            \item 3D location \(\vb{x} = (x, y, z)\)
+            \item viewing unit-norm direction \(\vb{d} = (d_x, d_y, d_z)\) 
+        \end{itemize} 
+        \item outputs
+        \begin{itemize}
+            \item color \(\vb{c} = (r, g, b)\)
+            \item volume density \(\sigma(\vb{x})\) 
+        \end{itemize}
+    \end{itemize}
+
+    To synthesize a novel view, just sample new 3D location and viewing direction
+\end{frame}
+
+\begin{frame}{Volume Rendering with Radiance Fields}
+    \(\sigma(x) \rightarrow\) differential probability of a camera ray terminating at location \(x\)
+
+    \begin{block}{Expected color}
+        
+        The expected color \(\hat{\vb{C}}(\vb{r})\) of camera ray \(\vb{r}(t) = \vb{o} + t\vb{d}\) is computed by approximating the rendering integral with numerical quadrature (stratified sampling approach):
+        \begin{align}
+            \hat{\vb{C}}(\vb{r}) = \mathcal{R}(\vb{r}, \vb{c}, \sigma) = \sum_{k = 1}^{K} T(t_k) \alpha (\sigma (t_k)\delta_k) \vb{c}(t_k),\\
+            \textrm{where} \quad T(t_k) = \exp \parenth[\Bigg]{-\sum_{k' = 1}^{k - 1} \sigma (t_{k'}) \delta_{k'}} 
+        \end{align}
+    \end{block}
+    \begin{itemize}
+        \item \(T(t_k)\): probability that ray travels without hitting anything - given location \(\vb{x}\) and viewing direction, it expresses how it is likely to find something
+        \item \(\alpha(\sigma (t_k)\delta_k) = 1 - \exp(- \sigma (t_k)\delta_k)\) 
+        \item \(\delta_k = t_{k-1} - t_k\) (distance between quadrature points)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Optimizing NeRFs}
+    A few tricks are employed:
+    \begin{itemize}
+        \item Positional encoding: location vector \(\vb{x}\) is mapped to a higher dimensional space in order to more easily approximate higher-frequency functions
+        \item Hierarchical volume sampling: two MLP are actually employed, a coarse one (first) and then a fine one (sampling points for its rays are sampled after the coarse has run for a given training epoch) 
+    \end{itemize}
+    \begin{block}{Training loss}
+        \begin{equation}
+            \sum_{\vb{r} \in \mathcal{R}} ||\vb{C}(\vb{r}) - \vb{\hat{C}}^c(\vb{r})||_2^2 + ||\vb{C}(\vb{r}) - \vb{\hat{C}}^f(\vb{r})||_2^2
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\section{Paper contribution: NeRF in the Wild}
+\section{Limitations, possible improvements, future work}
+\begin{frame}
+    \begin{center}
+        Thanks for your attention
+    \end{center}
+\end{frame}
 
 \end{document}
