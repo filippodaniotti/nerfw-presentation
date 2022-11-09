@@ -1,0 +1,64 @@
+\documentclass[aspectratio=1610]{beamer}
+\usepackage{theme}
+\usepackage[utf8x]{inputenc}
+
+\usepackage[english]{babel}
+\usepackage{calligra}
+\usepackage{lmodern}
+\usepackage{subcaption}
+\usepackage{hyperref}
+
+\usepackage{amsmath,amssymb,amsfonts,physics}
+\usepackage{array, booktabs, makecell}
+\usepackage{tabularx}
+
+\usepackage{textcomp}
+\makeatletter
+\newcommand{\removelatexerror}{\let\@latex@error\@gobble}
+\makeatother
+
+% Graphics and video
+\usepackage{graphicx,float,wrapfig}
+\graphicspath{
+  {./assets/images/}%
+}
+
+
+% args: big, bigg, Big, Bigg
+\newcommand{\parenth}[2][]{#1(#2#1)}
+\renewcommand{\bold}[1]{\textbf{\structure{#1}}}
+  
+\author[Daniotti \and Lucerno]{Filippo Daniotti \and Taylor Lucerno}
+\title[NeRF-W]{\textsc{NeRF in the Wild}}
+\subtitle{Neural Radiance Fields for Unconstrained Photo Collections}
+\institute[DISI - UniTN]{Department of Information Engineering\\and Computer Science}
+\date{\today}
+
+
+\AtBeginSection[]
+{
+    \begin{frame}
+        \frametitle{Table of Contents}
+        \tableofcontents[currentsection]
+    \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[width=0.4\linewidth]{marchio_unitrento_colore_it_202002.eps}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+    \tableofcontents[sectionstyle=show,subsectionstyle=show/shaded/hide,subsubsectionstyle=show/shaded/hide]
+\end{frame}
+
+
+
+\end{document}
