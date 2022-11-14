@@ -123,6 +123,24 @@
     \end{itemize}
 \end{frame}
 
+\begin{frame}{Architecture}
+    Quick note on the architecture:
+    \begin{itemize}
+        \item the original NeRF uses one single MLP
+        \item NeRF-W uses two different MLPs the better enforce the dependencies
+        \begin{itemize}
+            \item one to estimate density \(\sigma(t)\) and a vector \(\vb{z}(t)\) from the location
+            \item one to estimate the color \(\vb{c}(t)\) from the viewing direction and the vector \(\vb{z}(t)\)
+        \end{itemize}
+    \end{itemize}
+    \begin{block}{MLPs}
+        \begin{align}
+            [\sigma(t), \vb{z}(t)] &= \textrm{MLP}_{\theta_1} (\gamma_{\vb{x}}(\vb{r}(t))) \\
+            \vb{c}(t) &= \textrm{MLP}_{\theta_2} (\vb{z}(t), \gamma_{\vb{d}}(\vb{d}))
+        \end{align}
+    \end{block}
+\end{frame}
+
 \begin{frame}{Optimizing NeRFs}
     A few tricks are employed:
     \begin{itemize}
@@ -136,7 +154,22 @@
     \end{block}
 \end{frame}
 
+\begin{frame}{NeRF Limitations}
+    NeRFs assume that the real world scenes are geometrically, phonometrically and materially static, which is often not the case
+    \begin{itemize}
+        \item phonometric variations: two photographs of a scene taken at different times of day, different periods of the year, atmospheric conditions will vary in terms of illumination, shading, ton quality
+        \item transient objects: many real world landmakrs will have a crowd around, possibly captured in the shots
+    \end{itemize}
+    NeRFs in the wild address these two issues
+\end{frame}
+
 \section{Paper contribution: NeRF in the Wild}
+\begin{frame}{}
+
+    
+
+\end{frame}
+
 \section{Limitations, possible improvements, future work}
 \begin{frame}
     \begin{center}
