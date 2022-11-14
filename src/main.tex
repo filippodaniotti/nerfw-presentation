@@ -81,46 +81,45 @@
     \end{itemize}
 \end{frame}
 
-\section{Background: NeRF}
-\begin{frame}{Neural Radiance Fields}
+\section{Background: Neural Radiance Fields}
+\begin{frame}{Core concepts}
     \begin{block}{In a nutshell}
-        Pick a \(F_\Theta\) MLP and make it overfit so the desired scene is encoded within its weights\\\(\rightarrow\) one trained model represents only one scene!
+        NeRFs represent a continuous complex scene as a function 
+        \begin{equation*}
+            F_\theta : (\vb{x}, \vb{d}) \rightarrow (\vb{c}, \sigma)
+        \end{equation*}
     \end{block}
-    \begin{equation*}
-        F_\Theta : (\vb{x}, \vb{d}) \rightarrow (\vb{c}, \sigma)
-    \end{equation*}
-    \begin{itemize}
-        \item inputs (obtained from structure-from-motion techniques)
-        \begin{itemize}
-            \item 3D location \(\vb{x} = (x, y, z)\)
-            \item viewing unit-norm direction \(\vb{d} = (d_x, d_y, d_z)\) 
-        \end{itemize} 
-        \item outputs
-        \begin{itemize}
-            \item color \(\vb{c} = (r, g, b)\)
-            \item volume density \(\sigma(\vb{x})\) 
-        \end{itemize}
-    \end{itemize}
-
-    To synthesize a novel view, just sample new 3D location and viewing direction
+    This function is approximated with a MLP \(F_\theta \rightarrow\)  overfitted to encode only scene!
+    % \pause
+    \bigskip
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=.7\textwidth,keepaspectratio]{mapping}
+    \end{figure}
 \end{frame}
 
-\begin{frame}{Volume Rendering with Radiance Fields}
-    \(\sigma(x) \rightarrow\) differential probability of a camera ray terminating at location \(x\)
-
-    \begin{block}{Expected color}
-        
-        The expected color \(\hat{\vb{C}}(\vb{r})\) of camera ray \(\vb{r}(t) = \vb{o} + t\vb{d}\) is computed by approximating the rendering integral with numerical quadrature (stratified sampling approach):
-        \begin{align}
-            \hat{\vb{C}}(\vb{r}) = \mathcal{R}(\vb{r}, \vb{c}, \sigma) = \sum_{k = 1}^{K} T(t_k) \alpha (\sigma (t_k)\delta_k) \vb{c}(t_k),\\
-            \textrm{where} \quad T(t_k) = \exp \parenth[\Bigg]{-\sum_{k' = 1}^{k - 1} \sigma (t_{k'}) \delta_{k'}} 
-        \end{align}
-    \end{block}
-    \begin{itemize}
-        \item \(T(t_k)\): probability that ray travels without hitting anything - given location \(\vb{x}\) and viewing direction, it expresses how it is likely to find something
-        \item \(\alpha(\sigma (t_k)\delta_k) = 1 - \exp(- \sigma (t_k)\delta_k)\) 
-        \item \(\delta_k = t_{k-1} - t_k\) (distance between quadrature points)
-    \end{itemize}
+\begin{frame}{Core concepts: synthesizing novel views}
+    \begin{columns}
+        \begin{column}{.5\textwidth}
+            \begin{figure}[H]
+                \includegraphics[width=.7\textwidth,keepaspectratio]{density-1}
+            \end{figure}
+        \end{column}
+        \pause
+        \begin{column}{.5\textwidth}
+            \begin{figure}[H]
+                \includegraphics[width=.7\textwidth,keepaspectratio]{density-2}
+            \end{figure}
+        \end{column}
+    \end{columns}
+    \begin{onlyenv}<3->
+        \begin{block}{Volume rendering with Radiance Fields} 
+            Approximate the expected color \(\hat{\vb{C}}(\vb{r})\) encountered by camera ray \(\vb{r}(t) = \vb{o} + t\vb{d}\)
+            \begin{equation*}
+                \hat{\vb{C}}(\vb{r}) = \mathcal{R}(\vb{r}, \vb{c}, \sigma) = \sum_{k = 1}^{K} T(t_k) \alpha (\sigma (t_k)\delta_k) \vb{c}(t_k)
+            \end{equation*}
+        \end{block}
+    \end{onlyenv}
 \end{frame}
 
 \begin{frame}{Architecture}
