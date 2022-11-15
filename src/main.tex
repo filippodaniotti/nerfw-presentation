@@ -35,13 +35,13 @@
 \date{\today}
 
 
-\AtBeginSection[]
-{
-    \begin{frame}
-        \frametitle{Table of Contents}
-        \tableofcontents[currentsection]
-    \end{frame}
-}
+% \AtBeginSection[]
+% {
+%     \begin{frame}
+%         \frametitle{Table of Contents}
+%         \tableofcontents[currentsection]
+%     \end{frame}
+% }
 
 \begin{document}
 
@@ -82,6 +82,8 @@
 \end{frame}
 
 \section{Background: Neural Radiance Fields}
+
+\subsection*{Core concepts}
 \begin{frame}{Core concepts: representing a scene as a NeRF}
     \begin{block}{In a nutshell}
         NeRFs represent a continuous complex scene as a function 
@@ -122,6 +124,7 @@
     \end{onlyenv}
 \end{frame}
 
+\subsection*{Model}
 \begin{frame}{Architecture}
     \begin{onlyenv}<1>
         \begin{figure}[H]
@@ -189,16 +192,16 @@
     \bigskip
     \pause
     \begin{columns}[t]
-        \begin{column}{.4\textwidth}
+        \begin{column}{.42\textwidth}
             \textbf{Positional encoding}\\
-            map \(\vb{x}\) and \(\vb{d}\) to a higher-dimensional space
+            map \(\vb{x}\), \(\vb{d}\) to a higher-dimensional space
             \begin{align*}
-                &\textrm{MLP}_{\theta_1} (\gamma_{\vb{x}}(\vb{x})) \\
-                &\textrm{MLP}_{\theta_2} (\vb{z}(t), \gamma_{\vb{d}}(\vb{d}))
+                [\sigma(t), \vb{z}(t)] & = \textrm{MLP}_{\theta_1} (\alert<2>{\gamma}_{\vb{x}}(\vb{x})) \\
+                \vb{c}(t) & = \textrm{MLP}_{\theta_2} (\vb{z}(t), \alert<2>{\gamma}_{\vb{d}}(\vb{d}))
             \end{align*}
         \end{column}
         \pause
-        \begin{column}{.4\textwidth}
+        \begin{column}{.42\textwidth}
             \textbf{Hierarchical volume sampling}\\
             use 2 MLPs sequentially
             \begin{align*}
@@ -225,7 +228,7 @@
     \vspace{1.5cm}
     \begin{columns}[t]
         \begin{column}{.4\textwidth}
-            Phonometric variations\\
+            Photometric variations\\
         \end{column}
         \begin{column}{.4\textwidth}
             Transient objects\\
@@ -252,11 +255,55 @@
     NeRF in the wild addresses these two issues
 \end{frame}
 
-\section{Paper contribution: NeRF in the Wild}
-\begin{frame}{}
+\section{NeRF in the Wild}
+\begin{frame}{Contributions}
+    NeRF-W builds up on NeRF and adds the following ideas:
+    \bigskip
+    \pause
+    \begin{itemize}
+        \item make radiance \(\vb{c}_i (t)\) image-dependent \(\rightarrow\) allow variations in \(\vb{\hat{C}}_i\) between images 
+        \pause 
+        \item add a \emph{transient} head \(\rightarrow\) emits its own color \emph{and density}
+        \begin{itemize}
+            \item transient density varies between images
+            \item weighted by uncertainty field
+        \end{itemize}
+    \end{itemize}
+\end{frame}
 
+\subsection*{Latent appearence modeling}
+\begin{frame}{Latent appearence modeling}
+    \begin{block}{Generative Latent Optimization}
+        Assign a \(\ell_i^{(a)}\) of length \(n^{(a)}\) appearence embedding vector to each image \(\mathcal{I}_i\)
+        \begin{equation*}
+            \vb{c}_i(t) = \textrm{MLP}_{\theta_2} (\vb{z}(t), \gamma_{\vb{d}}(\vb{d}), \ell_i^{(a)})
+        \end{equation*}
+        Optimize \(\{\ell_i^{(a)}\}_{i=1}^N\) alongside \(\theta\)
+    \end{block}
+    \begin{onlyenv}<2>
+        \bigskip
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=.65\textwidth,keepaspectratio]{nerfa-architecture.png}
+        \end{figure}
+    \end{onlyenv}
+\end{frame}
+
+\begin{frame}{Rationale}
+    \begin{itemize}
+        \item \(\ell_i^{(a)}\) fed only to MLP\(_{\theta_2}\) \(\rightarrow\) keep 3D geometry prediction static
+        \item keep \(n^{(a)}\) small \(\rightarrow\) allows better illumination embeddings and smoother interpolation
+    \end{itemize}
+    \bigskip
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=\textwidth,keepaspectratio]{nerfa-results.png}
+    \end{figure}
+\end{frame}
+
+\subsection*{Transient component}
+\begin{frame}{Transient Head}
     
-
 \end{frame}
 
 \section{Limitations, possible improvements, future work}
