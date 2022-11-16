@@ -303,7 +303,62 @@
 
 \subsection*{Transient component}
 \begin{frame}{Transient Head}
-    
+    Transient phenomena alter density \(\sigma\)\\
+    \pause
+    \(\rightarrow\) new MLP head \pause \(\rightarrow\) emits image-dependent
+    \begin{itemize}
+        \item color \(\vb{c}_i^{(\tau)}(t)\)
+        \item density \(\sigma_i^{(\tau)}(t)\)
+    \end{itemize}
+    \bigskip
+    \begin{block}{Expected color}<2->
+        \begin{equation*}
+            \hat{\vb{C}}(\vb{r}) = \sum_{k = 1}^{K} T(t_k) ( \alpha (\sigma (t_k)\delta_k)  \vb{c}(t_k)  \alert{+ (\sigma_i^{(\tau)} (t_k)\delta_k)  \vb{c}_i^{(\tau)}(t_k)})
+        \end{equation*}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Uncertainty field}
+    \begin{itemize}
+        \item Transient head also emits an uncertainty field
+        \item allows the model to ignore unreliable pixels and 3D locations
+        \item modeled with Bayesian learning
+        \item assumption: pixels are inherently noisy  and noise is image-dependent
+        \item true color \(\vb{C}_i (\vb{r})\) modeled as \(\mathcal{N} = (\hat{\vb{C}_i} (\vb{r}), \beta_i (\vb{r})^2 I)\)
+        \item \(\beta_i (\vb{r})\) rendered  as \(\hat{\beta}_i (\vb{r}) = \mathcal{R}(\vb{r}, \beta_i, \sigma_i^{(\tau)})\)
+        \item we use a transient embedding vector \(\ell_i^{(\tau)}\) to allow transient component to be image-dependent
+        \begin{equation*}
+            \bigg[\sigma_i^{(\tau)} (t), \vb{c}_i^{(\tau)} (t), \tilde{\beta}_i (t)\bigg] = \textrm{MLP}_{\theta_3} \parenth[\bigg]{\vb{z}(t), \ell_i^{(\tau)}}
+        \end{equation*}
+        \item softplus is used for uncertainty \(\beta_i (t) = \beta_{\textrm{min}} + \log \parenth[\bigg]{1+\exp \parenth[\bigg]{\tilde{\beta}_i (t)}}\)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{NeRF-W full architecture}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=.8\textwidth,keepaspectratio]{nerfw-architecture.png}
+    \end{figure}
+\end{frame}
+
+\subsection{Optimizing NeRF-W}
+\begin{frame}{Optimization}
+    \begin{block}{Fine-model-only component loss}
+        Loss for ray \(\vb{r}\) in image \(i\) with true color \(\vb{C}(\vb{r})\)
+        \begin{equation*}
+            L_i(\vb{r}) 
+            = \frac{|| \vb{C}_i (\vb{r}) - \hat{\vb{C}}_i (\vb{r}) ||_2^2}{2\beta_i (\vb{r})^2} 
+            + \frac{\log \beta_i (\vb{r})^2}{2} 
+            + \frac{\lambda_u}{K} \sum^K_{k=1}\sigma_i^{(\tau)} (t_k)
+        \end{equation*}
+    \end{block}
+    \bigskip
+    \begin{block}{Objective}
+        Fine model uses aforementioned loss, while coarse model only uses latent appearance modeling component
+        \begin{equation*}
+            \sum_{ij} L_i (\vb{r}_{ij}) + \frac{1}{2} || \vb{C} (\vb{r}_{ij}) - \hat{\vb{C}}_i^c (\vb{r}_{ij}) ||^2_2 
+        \end{equation*}
+    \end{block}  
 \end{frame}
 
 \section{Limitations, possible improvements, future work}
@@ -312,5 +367,6 @@
         Thanks for your attention
     \end{center}
 \end{frame}
+
 
 \end{document}
