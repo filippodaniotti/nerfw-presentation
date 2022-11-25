@@ -57,7 +57,7 @@
 
 
 \begin{frame}
-    \tableofcontents[sectionstyle=show,subsectionstyle=show/shaded/hide,subsubsectionstyle=show/shaded/hide]
+    \tableofcontents[sectionstyle=show,subsectionstyle=show,subsubsectionstyle=show/shaded/hide]
 \end{frame}
 
 \section{Introduction}
@@ -65,13 +65,14 @@
     Content:
     \begin{itemize}
         \item problem statement
+        \item real world applications
         \item NeRF
         \item NeRF in the Wild
     \end{itemize}
 \end{frame}
 
-\section{The Problem}
-\begin{frame}
+\subsection{The problem}
+\begin{frame}{The problem}
     \begin{itemize}
         \item synthesizing novel views of a scene from a sparse set of captured images
         \item doing it in unconstrained environment:
@@ -82,9 +83,14 @@
     \end{itemize}
 \end{frame}
 
+\subsection{Applications}
+\begin{frame}{Real-world applications}
+    
+\end{frame}
+
 \section{Background: Neural Radiance Fields}
 
-\subsection*{Core concepts}
+\subsection{Core concepts}
 \begin{frame}{Core concepts: representing a scene as a NeRF}
     \begin{block}{In a nutshell}
         NeRFs represent a continuous complex scene as a function 
@@ -125,7 +131,7 @@
     \end{onlyenv}
 \end{frame}
 
-\subsection*{Model}
+\subsection{Model}
 \begin{frame}{Architecture}
     \begin{onlyenv}<1>
         \begin{figure}[H]
@@ -171,21 +177,6 @@
             \end{columns}
         }
     \end{onlyenv}
-    % Quick note on the architecture:
-    % \begin{itemize}
-    %     \item the original NeRF uses one single MLP
-    %     \item NeRF-W uses two different MLPs the better enforce the dependencies
-    %     \begin{itemize}
-    %         \item one to estimate density \(\sigma(t)\) and a vector \(\vb{z}(t)\) from the location
-    %         \item one to estimate the color \(\vb{c}(t)\) from the viewing direction and the vector \(\vb{z}(t)\)
-    %     \end{itemize}
-    % \end{itemize}
-    % \begin{block}{MLPs}
-    %     \begin{align}
-    %         [\sigma(t), \vb{z}(t)] &= \textrm{MLP}_{\theta_1} (\gamma_{\vb{x}}(\vb{r}(t))) \\
-    %         \vb{c}(t) &= \textrm{MLP}_{\theta_2} (\vb{z}(t), \gamma_{\vb{d}}(\vb{d}))
-    %     \end{align}
-    % \end{block}
 \end{frame}
 
 \begin{frame}{Optimizing NeRFs}
@@ -247,10 +238,6 @@
             \end{center}
         \end{column}
     \end{columns}
-    % \begin{itemize}
-    %     \item phonometric variations: two photographs of a scene taken at different times of day, different periods of the year, atmospheric conditions will vary in terms of illumination, shading, ton quality
-    %     \item transient objects: many real world landmakrs will have a crowd around, possibly captured in the shots
-    % \end{itemize}
     \vspace{1.5cm}
     \pause
     NeRF in the wild addresses these two issues
@@ -272,7 +259,7 @@
     \end{itemize}
 \end{frame}
 
-\subsection*{Latent appearence modeling}
+\subsection{Latent appearence modeling}
 \begin{frame}{Latent appearence modeling}
     \begin{block}{Generative Latent Optimization}
         Assign a \(\ell_i^{(a)}\) 
@@ -310,7 +297,7 @@
     \end{figure}
 \end{frame}
 
-\subsection*{Transient component}
+\subsection{Transient component}
 \begin{frame}{Transient Head}
     Transient phenomena alter image density
     \bigskip
@@ -404,7 +391,7 @@
 \subsection{Results}
 \begin{frame}{Phototourism dataset}
     \begin{center}
-        \includegraphics[width=.7\textwidth]{res-photo.png}
+        \includegraphics[width=.69\textwidth]{res-photo.png}
     \end{center}
 \end{frame}
 \begin{frame}{Lego dataset}
@@ -414,6 +401,49 @@
 \end{frame}
 
 \section{Our contribution}
+\subsection{Multi-scale extension}
+\begin{frame}{Multi-scale extension}
+    \begin{itemize}
+        \item NeRF renders degrade if multi-scale data are used in training 
+        \begin{itemize}
+            \item aliasing artifacts
+            \item huge deal: landmarks pictures are rarely shot at the same distance
+        \end{itemize}
+        \item solution: mipNeRF from Barrel et al.
+        \begin{itemize}
+            \item model camera ray as a cone rather than single ray
+            \item considera gaussian of positional encoding
+            \item modulate bell width (variance) to modulate cone width (blur)
+        \end{itemize}
+    \end{itemize}
+    \bigskip
+    \begin{figure}[H]
+        \includegraphics[width=.4\textwidth]{mipnerf-results.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Mipnerf gaussian positional encoding}
+    \begin{figure}[H]
+        \includegraphics[width=.6\textwidth]{mipnerf-narrow.png}
+    \end{figure}
+    \begin{figure}[H]
+        \includegraphics[width=.6\textwidth]{mipnerf-wide.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Attention based}
+    \begin{itemize}
+        \item we want to weight importance of a pixel given a surrounding region
+        \item attention maps does exaclt that (do they?)
+        \item we can employ transformers
+        \begin{itemize}
+            \item does it work?
+            \item does it perform better than the gaussian mipnerf thing?
+            \item does it have any side-effects?
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
 \begin{frame}[plain,noframenumbering]
     \begin{center}
         Thanks for your attention
