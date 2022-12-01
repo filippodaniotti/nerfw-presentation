@@ -64,22 +64,11 @@
 \end{frame}
 
 \section{Introduction}
-% \begin{frame}{Introduction}
-%     Content:
-%     \begin{itemize}
-%         \item problem statement
-%         \item real world applications
-%         \item NeRF
-%         \item NeRF in the Wild
-%     \end{itemize}
-% \end{frame}
-
-% \subsection{The problem}
 \begin{frame}{The problem: Novel view synthesis}
     We want to synthesize novel views of a scene from a sparse set of images  
-    \begin{figure}[H]
-        \animategraphics[loop,autoplay,width=.8\textwidth]{20}{assets/gifs/problem/problem-}{0}{57}
-    \end{figure}
+    % \begin{figure}[H]
+    %     \animategraphics[loop,autoplay,width=.8\textwidth]{20}{assets/gifs/problem/problem-}{0}{57}
+    % \end{figure}
 \end{frame}
 
 % \subsection{Applications}
@@ -97,8 +86,13 @@
             F_\theta : (\vb{x}, \vb{d}) \rightarrow (\vb{c}, \sigma)
         \end{equation*}
     \end{block}
-    This function is approximated with a MLP \(F_\theta \rightarrow\)  overfitted to encode only scene!
-    % \pause
+    \begin{itemize}
+        \item This function is approximated with a MLP \(F_\theta\)
+        \begin{itemize}
+            \item  overfitted to encode only scene!
+        \end{itemize}
+    \end{itemize}
+    \pause
     \bigskip
     \begin{figure}[H]
         \centering
@@ -207,23 +201,21 @@
             \end{align*}
         \end{column}
     \end{columns}
-    % \begin{itemize}
-    %     \item Positional encoding: location vector \(\vb{x}\) is mapped to a higher dimensional space in order to more easily approximate higher-frequency functions
-    %     \item Hierarchical volume sampling: two MLP are actually employed, a coarse one (first) and then a fine one (sampling points for its rays are sampled after the coarse has run for a given training epoch) 
-    % \end{itemize}
-    % \bigskip
-    % \pause
-    % \begin{block}{Training objective}
-    %     \begin{equation}
-    %         \sum_{\vb{r} \in \mathcal{R}} ||\vb{C}(\vb{r}) - \vb{\hat{C}}^c(\vb{r})||_2^2 + ||\vb{C}(\vb{r}) - \vb{\hat{C}}^f(\vb{r})||_2^2
-    %     \end{equation}
-    % \end{block}
 \end{frame}
 
 \begin{frame}{Optimizing NeRFs}
-    \begin{figure}
-        \includegraphics[width=.3\textwidth]{coarse-fine.png}
-    \end{figure}
+    \begin{columns}
+        \begin{column}{.5\textwidth}
+            \begin{figure}
+                \includegraphics[width=.7\textwidth]{coarse.png}
+            \end{figure}
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \begin{figure}
+                \includegraphics[width=.7\textwidth]{coarse-fine.png}
+            \end{figure}
+        \end{column}
+    \end{columns}
     \bigskip
     \begin{block}{Training objective}
         \begin{equation}
@@ -233,8 +225,14 @@
 \end{frame}
 
 \begin{frame}{NeRF Limitations}
-    NeRFs assume real world scenes to be \bold{static}
-    \vspace{1.5cm}
+    \begin{itemize}
+        \item NeRFs assume real world scenes to be \bold{static}
+        \pause
+        \begin{itemize}
+            \item this is often not the case!
+        \end{itemize}
+    \end{itemize}
+    \vspace{1.2cm}
     \begin{columns}[t]
         \begin{column}{.4\textwidth}
             Photometric variations\\
@@ -255,7 +253,7 @@
             \end{center}
         \end{column}
     \end{columns}
-    \vspace{1.5cm}
+    \vspace{1.2cm}
     \pause
     NeRF in the wild addresses these two issues
 \end{frame}
@@ -280,12 +278,10 @@
 \begin{frame}{Latent appearence modeling}
     \begin{block}{Generative Latent Optimization}
         Assign a \(\ell_i^{(a)}\) 
-        %of length \(n^{(a)}\) 
         appearence embedding vector to each image \(\mathcal{I}_i\)
         \begin{equation*}
             \vb{c}_i(t) = \textrm{MLP}_{\theta_2} (\vb{z}(t), \gamma_{\vb{d}}(\vb{d}), \alert{\ell_i^{(a)}})
         \end{equation*}
-        % Optimize \(\ell_i^{(a)}\) alongside \(\theta\)
     \end{block}
     \begin{onlyenv}<2>
         \bigskip
@@ -406,16 +402,16 @@
 \end{frame}
 
 \subsection{Results}
-% \begin{frame}{Results: interpolations}
-%     \begin{figure}[H]
-%         \animategraphics[loop,autoplay,width=.7\textwidth]{60}{assets/gifs/interpolations/interpol-}{0}{449}
-%     \end{figure}
-% \end{frame}
-% \begin{frame}{Results: consistent geometry}
-% \begin{figure}[H]
-%     \animategraphics[loop,autoplay,width=.7\textwidth]{60}{assets/gifs/geometry/geometry-}{0}{209}
-%     \end{figure}
-% \end{frame}
+\begin{frame}{Results: interpolations}
+    \begin{figure}[H]
+        % \animategraphics[loop,autoplay,width=.7\textwidth]{60}{assets/gifs/interpolations/interpol-}{0}{449}
+    \end{figure}
+\end{frame}
+\begin{frame}{Results: consistent geometry}
+    \begin{figure}[H]
+        % \animategraphics[loop,autoplay,width=.7\textwidth]{60}{assets/gifs/geometry/geometry-}{0}{209}
+    \end{figure}
+\end{frame}
 \begin{frame}{Ablation study: Phototourism dataset}
     \begin{center}
         \includegraphics[width=.69\textwidth]{res-photo.png}
@@ -427,7 +423,101 @@
     \end{center}
 \end{frame}
 
+\begin{frame}{Concluding remarks}
+    \begin{itemize}
+        \item NeRF-W builds up on NeRF:
+        \begin{itemize}
+            \item disentangles 3D geometry and appearance embedding
+            \item allows smooth interpolation between static geometry and appearance
+            \item disentangles static representation and transient representation
+            \item impressive results!
+        \end{itemize}
+        \pause
+        \item ... but still, it retains some NeRFF limitations:
+        \begin{itemize}
+            \item ridicoulosly slow training time: 2~4 days for a scene!
+            \item slow inference time, order of minutes
+            \item oblique and rarely seen parts of images get blurry renderings
+        \end{itemize}
+        \pause
+        \item some more catches:
+        \begin{itemize}
+            \item view-dependent radiance vs. \(\ell_i^{(a)}\)
+            \item does distance from camera affect training and quality of results?
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
 \section{Our contribution}
+% \begin{frame}{The NeRF jungle}
+%     \begin{itemize}
+%         \item Papers on NeRFs are 
+%     \end{itemize}
+% \end{frame}
+\subsection{Tweaking complexity}
+\begin{frame}{Tweaking complexity}
+    How can we speed up the insanely long NeRF-W training and inference time?\\
+    \bigskip
+    A few ideas:
+    \begin{itemize}
+        \item \bold{meta-learning}
+        \begin{itemize}
+            \item NeRF-W has many hyperparameters
+            \item we can use meta-learning algorithms to learn better initialization
+            \item (check whether MAML helps to reach convergence faster)
+        \end{itemize}
+        \item \bold{network trimming}
+        \begin{itemize}
+            \item some nodes of the network mainly outputs zeroes
+            \item they can be pruned without affecting results
+            \item faster inference time
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{SOTA review}
+    \begin{itemize}
+        \item JaxNeRF
+        \item AutoInt
+        \item Learned initialization
+        \item DeRF
+        \item NeRF++
+        \item Neural Sparse Voxel Fields
+    \end{itemize}
+\end{frame}
+\subsection{Time embedding vector}
+\begin{frame}{Time embedding vector}
+    Can we extend NeRF-W to model simple dynamic scenes?\\
+    \bigskip
+    Generative latent optimization may come in help once again
+    \begin{itemize}
+        \item pick a video, sample enough shots to describe the movement
+        \item pick a time embedding vector \(\ell^{(\chi)}\) 
+        \item feed \(\ell^{(\chi)}\) to the transient head
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{SOTA review}
+    HumanNeRF can do way more than this
+\end{frame}
+
+\subsection{Appearence ambiguity}
+\begin{frame}{Appearence ambiguity}
+    It is unclear how NeRF-W learns appearence
+    \bigskip
+    \begin{itemize}
+        \item do we still need the color to be independent from the radiance?
+        \item get rid of redundant components
+        \item simplify and merge MLP\(_1\) and MLP\(_2\)
+    \end{itemize}
+    \bigskip
+    \begin{exampleblock}{Jon Barron itself says}
+        \begin{quote}
+            That's definitely an issue, although it seems to be not that bad of an issue
+          \end{quote}
+    \end{exampleblock}
+\end{frame}
+
 \subsection{Multi-scale extension}
 \begin{frame}{Multi-scale extension}
     \begin{itemize}
@@ -449,33 +539,29 @@
     \end{figure}
 \end{frame}
 
-\begin{frame}{Mipnerf gaussian positional encoding}
+\begin{frame}{MipNeRF gaussian positional encoding}
     \begin{center}
-        \animategraphics[loop,autoplay,width=\textwidth]{20}{assets/gifs/mipnerf/mipnerf-}{0}{269}
+        % \animategraphics[loop,autoplay,width=\textwidth]{20}{assets/gifs/mipnerf/mipnerf-}{0}{269}
     \end{center}
 \end{frame}
 
-% \begin{frame}{Attention based}
-%     \begin{itemize}
-%         \item we want to weight importance of a pixel given a surrounding region
-%         \item attention maps does exaclt that (do they?)
-%         \item we can employ transformers
-%         \begin{itemize}
-%             \item does it work?
-%             \item does it perform better than the gaussian mipnerf thing?
-%             \item does it have any side-effects?
-%         \end{itemize}
-%     \end{itemize}
-% \end{frame}
+\begin{frame}{Attention based}
+    \begin{itemize}
+        \item we want to weight importance of a pixel given a surrounding region
+        \item attention maps does exaclt that (do they?)
+        \item we can employ transformers
+        \begin{itemize}
+            \item does it work?
+            \item does it perform better than the gaussian mipnerf thing?
+            \item does it have any side-effects?
+        \end{itemize}
+    \end{itemize}
+\end{frame}
 
 \begin{frame}[plain,noframenumbering]
     \begin{center}
         Thanks for your attention
     \end{center}
-\end{frame}
-
-\begin{frame}[allowframebreaks,plain,noframenumbering]
-    \frametitle{References}
 \end{frame}
 
 \end{document}
