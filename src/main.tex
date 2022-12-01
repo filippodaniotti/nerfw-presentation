@@ -42,7 +42,7 @@
 \AtBeginSection[]
 {
     \begin{frame}
-        \frametitle{Table of Contents}
+        \frametitle{Contents}
         \tableofcontents[currentsection]
     \end{frame}
 }
@@ -60,20 +60,24 @@
 
 
 \begin{frame}
+    \frametitle{Contents}
     \tableofcontents[sectionstyle=show,subsectionstyle=show,subsubsectionstyle=show/shaded/hide]
 \end{frame}
 
 \section{Introduction}
 \begin{frame}{The problem: Novel view synthesis}
     We want to synthesize novel views of a scene from a sparse set of images  
-    % \begin{figure}[H]
-    %     \animategraphics[loop,autoplay,width=.8\textwidth]{20}{assets/gifs/problem/problem-}{0}{57}
-    % \end{figure}
+    \begin{figure}[H]
+        \animategraphics[loop,autoplay,width=.8\textwidth]{20}{assets/gifs/problem/problem-}{0}{57}
+    \end{figure}
 \end{frame}
 
 % \subsection{Applications}
 % \begin{frame}{Real-world applications}
-    
+%     Tons of applications:
+%     \begin{itemize}
+%         \item Data augmentation
+%     \end{itemize}
 % \end{frame}
 
 \section{Background: Neural Radiance Fields}
@@ -404,12 +408,12 @@
 \subsection{Results}
 \begin{frame}{Results: interpolations}
     \begin{figure}[H]
-        % \animategraphics[loop,autoplay,width=.7\textwidth]{60}{assets/gifs/interpolations/interpol-}{0}{449}
+        \animategraphics[loop,autoplay,width=.7\textwidth]{60}{assets/gifs/interpolations/interpol-}{0}{449}
     \end{figure}
 \end{frame}
 \begin{frame}{Results: consistent geometry}
     \begin{figure}[H]
-        % \animategraphics[loop,autoplay,width=.7\textwidth]{60}{assets/gifs/geometry/geometry-}{0}{209}
+        \animategraphics[loop,autoplay,width=.7\textwidth]{60}{assets/gifs/geometry/geometry-}{0}{209}
     \end{figure}
 \end{frame}
 \begin{frame}{Ablation study: Phototourism dataset}
@@ -430,10 +434,10 @@
             \item disentangles 3D geometry and appearance embedding
             \item allows smooth interpolation between static geometry and appearance
             \item disentangles static representation and transient representation
-            \item impressive results!
+            \item even more impressive results!
         \end{itemize}
         \pause
-        \item ... but still, it retains some NeRFF limitations:
+        \item ... but still, it retains some NeRF limitations:
         \begin{itemize}
             \item ridicoulosly slow training time: 2~4 days for a scene!
             \item slow inference time, order of minutes
@@ -442,7 +446,7 @@
         \pause
         \item some more catches:
         \begin{itemize}
-            \item view-dependent radiance vs. \(\ell_i^{(a)}\)
+            \item the contribution of \(\vb{d}\) vs. \(\ell_i^{(a)}\) is unclear
             \item does distance from camera affect training and quality of results?
         \end{itemize}
     \end{itemize}
@@ -464,7 +468,7 @@
         \begin{itemize}
             \item NeRF-W has many hyperparameters
             \item we can use meta-learning algorithms to learn better initialization
-            \item (check whether MAML helps to reach convergence faster)
+            \item MAML algorithm can be easily integrated
         \end{itemize}
         \item \bold{network trimming}
         \begin{itemize}
@@ -541,7 +545,7 @@
 
 \begin{frame}{MipNeRF gaussian positional encoding}
     \begin{center}
-        % \animategraphics[loop,autoplay,width=\textwidth]{20}{assets/gifs/mipnerf/mipnerf-}{0}{269}
+        \animategraphics[loop,autoplay,width=\textwidth]{20}{assets/gifs/mipnerf/mipnerf-}{0}{269}
     \end{center}
 \end{frame}
 
