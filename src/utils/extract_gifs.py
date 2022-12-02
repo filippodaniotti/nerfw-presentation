@@ -1,4 +1,4 @@
-r"""
+"""
 Usage:
 unix: python3 ./src/utils/extract_gifs.py problem.mp4 interpol.mp4 geometry.webm mipnerf.mp4
 win: python .\src\utils\extract_gifs.py problem.mp4 interpol.mp4 geometry.webm mipnerf.mp4
