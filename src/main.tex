@@ -458,7 +458,7 @@
             \item NeRF-W is a very dense network
             \item we can use meta-learning algorithms to learn better initialization
             \item MAML and Reptile algorithms can be easily integrated\footnote{Tancik et al. 2020, \emph{Learned Initializations for Optimizing Coordinate-Based Neural Representations}, \url{https://arxiv.org/abs/2012.02189}}
-            \item we can do better: we can meta-learn hyperparameters!\footnote{Baik et al. 2020, Meta-Learning with Adaptive Hyperparameters, \url{https://arxiv.org/pdf/2011.00209v2}}
+            \item we can do better: we can meta-learn hyperparameters!\footnote{Baik et al. 2020, Meta-Learning with Adaptive Hyperparameters, \url{https://arxiv.org/abs/2011.00209v2}}
             \item we can extend to learn some NeRF-W-specific hyperparameters:
             \begin{itemize}
                 \item dimension \(n^(\tau)\) of \(\ell_i^(\tau)\)
@@ -501,7 +501,7 @@
 \end{frame}
 
 \begin{frame}{SOTA review}
-    Lots of interest and papers!\footnote{Dellaert et Yen-Chen 2021, \emph{Neural volume rendering: NeRF and beyon}, \url{https://arxiv.org/pdf/2101.05204v2.pdf}}
+    Lots of interest and papers on NeRF efficiency!\footnote{Dellaert et Yen-Chen 2021, \emph{Neural volume rendering: NeRF and beyon}, \url{https://arxiv.org/abs/2101.05204v2}}
     \bigskip
     \begin{itemize}
         \item JaxNeRF
@@ -513,20 +513,21 @@
     \end{itemize}
 \end{frame}
 
-\subsection{Time embedding vector}
-\begin{frame}{Time embedding vector}
+\subsection{Temporal latent embedding vector}
+\begin{frame}{Temporal latent embedding vector}
     Can we extend NeRF-W to model simple dynamic scenes?\\
     \bigskip
     Generative latent optimization may come in help once again
     \begin{itemize}
         \item pick a video, sample enough shots to describe the movement
-        \item pick a time embedding vector \(\ell^{(\chi)}\) 
-        \item feed \(\ell^{(\chi)}\) to the transient head
+        \item pick a time embedding vector \(\ell_i^{(\chi)}\) 
+        \item make static density image dependent
+        \begin{equation*}
+            [\sigma_i(t), \vb{z}_i(t)] = \textrm{MLP}_{\theta_1} (\alert<2>{\gamma}_{\vb{x}}(\vb{x}), \alert{\ell_i^{(\chi)}})
+        \end{equation*}
+        \item larger \(n^{(\chi)}\) accounts for more comples dynamic scenes 
+        \item (add architecture diagram)
     \end{itemize}
-\end{frame}
-
-\begin{frame}{SOTA review}
-    HumanNeRF can do way more than this
 \end{frame}
 
 \subsection{Appearence ambiguity}
@@ -545,46 +546,6 @@
           \end{quote}
     \end{exampleblock}
 \end{frame}
-
-% \subsection{Multi-scale extension}
-% \begin{frame}{Multi-scale extension}
-%     \begin{itemize}
-%         \item NeRF renders degrade if multi-scale data are used in training 
-%         \begin{itemize}
-%             \item aliasing artifacts
-%             \item huge deal: landmarks pictures are rarely shot at the same distance
-%         \end{itemize}
-%         \item solution: mipNeRF from Barron et al.\cite{barron2021mipnerf}
-%         \begin{itemize}
-%             \item model camera ray as a cone rather than single ray
-%             \item considera gaussian of positional encoding
-%             \item modulate bell width (variance) to modulate cone width (blur)
-%         \end{itemize}
-%     \end{itemize}
-%     \bigskip
-%     \begin{figure}[H]
-%         \includegraphics[width=.4\textwidth]{mipnerf-results.png}
-%     \end{figure}
-% \end{frame}
-
-% \begin{frame}{MipNeRF gaussian positional encoding}
-%     \begin{center}
-%         % \animategraphics[loop,autoplay,width=\textwidth]{20}{assets/gifs/mipnerf/mipnerf-}{0}{269}
-%     \end{center}
-% \end{frame}
-
-% \begin{frame}{Attention based}
-%     \begin{itemize}
-%         \item we want to weight importance of a pixel given a surrounding region
-%         \item attention maps does exaclt that (do they?)
-%         \item we can employ transformers
-%         \begin{itemize}
-%             \item does it work?
-%             \item does it perform better than the gaussian mipnerf thing?
-%             \item does it have any side-effects?
-%         \end{itemize}
-%     \end{itemize}
-% \end{frame}
 
 \begin{frame}[plain,noframenumbering]
     \begin{center}
