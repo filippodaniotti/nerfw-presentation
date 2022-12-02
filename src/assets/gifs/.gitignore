@@ -1,0 +1,5 @@
+*
+!.gitignore
+# source videos
+!geometry.webm
+!interpol.mp4
