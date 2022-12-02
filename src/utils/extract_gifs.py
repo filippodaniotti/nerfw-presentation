@@ -29,7 +29,7 @@ def incremental_rename(prefix, ext):
 
 def main(video_path: str):
     video_name = video_path.split('.')[-2]
-    with ondir(join(os.getcwd(), 'src', 'assets', 'gifs')) as wd:
+    with ondir(join('src', 'assets', 'gifs')) as wd:
         if isdir(join(wd, video_name)):
             shutil.rmtree(video_name)
         os.mkdir(video_name)

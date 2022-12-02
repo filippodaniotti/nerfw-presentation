@@ -7,9 +7,6 @@
 \usepackage{lmodern}
 \usepackage{subcaption}
 \usepackage{hyperref}
-% \usepackage[inline]{enumitem}
-% \usepackage[citestyle=alphabetic,bibstyle=authortitle]{biblatex}
-% \addbibresource{bibliography.bib}
 
 \usepackage{amsmath,amssymb,amsfonts,physics}
 \usepackage{array, booktabs, makecell}
@@ -71,14 +68,6 @@
         % \animategraphics[loop,autoplay,width=.8\textwidth]{20}{assets/gifs/problem/problem-}{0}{57}
     \end{figure}
 \end{frame}
-
-% \subsection{Applications}
-% \begin{frame}{Real-world applications}
-%     Tons of applications:
-%     \begin{itemize}
-%         \item Data augmentation
-%     \end{itemize}
-% \end{frame}
 
 \section{Background: Neural Radiance Fields (NeRF)}
 
@@ -184,17 +173,15 @@
 \begin{frame}{Optimizing NeRFs}
     A few tricks are employed
     \bigskip
-    \pause
     \begin{columns}[t]
         \begin{column}{.42\textwidth}
-            \bold{Positional encoding}\\
+            \bold{Positional encoding}\footnotemark\\
             map \(\vb{x}\), \(\vb{d}\) to a higher-dimensional space
             \begin{align*}
                 [\sigma(t), \vb{z}(t)] & = \textrm{MLP}_{\theta_1} (\alert<2>{\gamma}_{\vb{x}}(\vb{x})) \\
                 \vb{c}(t) & = \textrm{MLP}_{\theta_2} (\vb{z}(t), \alert<2>{\gamma}_{\vb{d}}(\vb{d}))
             \end{align*}
         \end{column}
-        \pause
         \begin{column}{.42\textwidth}
             \bold{Hierarchical volume sampling}\\
             use 2 MLPs sequentially
@@ -205,11 +192,13 @@
         \end{column}
     \end{columns}
     \bigskip
+    \pause
     \begin{block}{Positional encoding}
         \begin{equation*}
             \gamma (\vb{x}) = \parenth[\bigg] {\sin (2^i \pi \vb{x}), \cos (2^i \pi \vb{x})}, \quad \forall i, 0 \le i \le L
         \end{equation*}
     \end{block}
+    \footnotetext[1]{Tancik et al. 2020, \emph{Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains}, \url{https://arxiv.org/abs/2006.10739}}
 \end{frame}
 
 \begin{frame}{Optimizing NeRFs}
@@ -268,20 +257,6 @@
 \end{frame}
 
 \section{NeRF in the Wild (NeRF-W)}
-% \begin{frame}{Contributions}
-%     NeRF-W builds up on NeRF and adds the following ideas:
-%     \bigskip
-%     \pause
-%     \begin{itemize}
-%         \item make radiance \(\vb{c}_i (t)\) image-dependent \(\rightarrow\) allow variations in \(\vb{\hat{C}}_i\) between images 
-%         \pause 
-%         \item add a \emph{transient} head \(\rightarrow\) emits its own color \emph{and density}
-%         \begin{itemize}
-%             \item transient density varies between images
-%             \item weighted by uncertainty field
-%         \end{itemize}
-%     \end{itemize}
-% \end{frame}
 
 \subsection{Latent appearence modeling}
 \begin{frame}{Latent appearence modeling}
@@ -471,45 +446,29 @@
         \item some more catches:
         \begin{itemize}
             \item the contribution of \(\vb{d}\) vs. \(\ell_i^{(a)}\) is unclear
-            \item does distance from camera affect training and quality of results?
         \end{itemize}
     \end{itemize}
 \end{frame}
 
 \section{Our contribution}
-% \begin{frame}{The NeRF jungle}
-%     \begin{itemize}
-%         \item Papers on NeRFs are 
-%     \end{itemize}
-% \end{frame}
 \subsection{Tweaking complexity}
 \begin{frame}{Tweaking complexity: faster train}
-    How can we speed up the insanely long NeRF-W training and inference time?\\
-    \bigskip
-    A few ideas:
-    \begin{itemize}
-        \item \bold{meta-learning}
+        \bold{Meta-learning}
         \begin{itemize}
-            \item NeRF-W has many hyperparameters
+            \item NeRF-W is a very dense network
             \item we can use meta-learning algorithms to learn better initialization
-            \item MAML algorithm can be easily integrated
+            \item MAML and Reptile algorithms can be easily integrated\footnote{Tancik et al. 2020, \emph{Learned Initializations for Optimizing Coordinate-Based Neural Representations}, \url{https://arxiv.org/abs/2012.02189}}
+            \item we can do better: we can meta-learn hyperparameters!\footnote{Baik et al. 2020, Meta-Learning with Adaptive Hyperparameters, \url{https://arxiv.org/pdf/2011.00209v2}}
+            \item we can extend to learn some NeRF-W-specific hyperparameters:
+            \begin{itemize}
+                \item dimension \(n^(\tau)\) of \(\ell_i^(\tau)\)
+                \item regularizer \(\lambda_u\)
+            \end{itemize}
         \end{itemize}
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{SOTA review}
-    \begin{itemize}
-        \item JaxNeRF
-        \item AutoInt
-        \item Learned initialization
-        \item DeRF
-        \item NeRF++
-        \item Neural Sparse Voxel Fields
-    \end{itemize}
 \end{frame}
 
 \begin{frame}{Tweaking complexity: faster inference}
-    \bold{Network trimming}:
+    \bold{Network trimming}\footnote{Hu et al. 2016, \emph{Network Trimming: A Data-Driven Neuron Pruning Approach towards Efficient Deep Architectures},  \url{https://arxiv.org/abs/1607.03250v1}}:
     \begin{itemize}
         \item APoZ: percentage of zero activations after ReLU
         \item empirical result: many (631) in VGG-16 have APoz \(>\) 90\%
@@ -538,6 +497,19 @@
             \item pruning useless nodes does not affect results
             \item faster inference!
         \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{SOTA review}
+    Lots of interest and papers!\footnote{Dellaert et Yen-Chen 2021, \emph{Neural volume rendering: NeRF and beyon}, \url{https://arxiv.org/pdf/2101.05204v2.pdf}}
+    \bigskip
+    \begin{itemize}
+        \item JaxNeRF
+        \item AutoInt
+        \item Learned initialization
+        \item DeRF
+        \item NeRF++
+        \item Neural Sparse Voxel Fields
     \end{itemize}
 \end{frame}
 
