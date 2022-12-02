@@ -80,7 +80,7 @@
 %     \end{itemize}
 % \end{frame}
 
-\section{Background: Neural Radiance Fields}
+\section{Background: Neural Radiance Fields (NeRF)}
 
 \subsection{Core concepts}
 \begin{frame}{Core concepts: representing a scene as a NeRF}
@@ -96,7 +96,6 @@
             \item  overfitted to encode only scene!
         \end{itemize}
     \end{itemize}
-    \pause
     \bigskip
     \begin{figure}[H]
         \centering
@@ -205,6 +204,12 @@
             \end{align*}
         \end{column}
     \end{columns}
+    \bigskip
+    \begin{block}{Positional encoding}
+        \begin{equation*}
+            \gamma (\vb{x}) = \parenth[\bigg] {\sin (2^i \pi \vb{x}), \cos (2^i \pi \vb{x})}, \quad \forall i, 0 \le i \le L
+        \end{equation*}
+    \end{block}
 \end{frame}
 
 \begin{frame}{Optimizing NeRFs}
@@ -262,7 +267,7 @@
     NeRF in the wild addresses these two issues
 \end{frame}
 
-\section{NeRF in the Wild}
+\section{NeRF in the Wild (NeRF-W)}
 % \begin{frame}{Contributions}
 %     NeRF-W builds up on NeRF and adds the following ideas:
 %     \bigskip
@@ -325,46 +330,44 @@
     \pause
     \begin{columns}
         \begin{column}{.5\textwidth}
-            \begin{itemize}
-                \item we need a way to disentangle static vs. transient representation of the scene
+            \begin{onlyenv}<2->
                 \begin{itemize}
-                    \item add a separate MLP head
+                    \item we need a way to disentangle static vs. transient representation of the scene
+                    \begin{itemize}
+                        \item add a separate MLP head
+                    \end{itemize}
                 \end{itemize}
-            \end{itemize}
-            \begin{itemize}
-                \item transient representation should be image-dependent
+            \end{onlyenv}
+            \uncover<3->{
                 \begin{itemize}
-                    \item use a transient embedding vector \(\ell_i^{(\tau)}\)
+                    \item transient representation should be image-dependent
+                    \begin{itemize}
+                        \item use a transient embedding vector \(\ell_i^{(\tau)}\)
+                    \end{itemize}
                 \end{itemize}
-            \end{itemize}
+            }
         \end{column}
         \begin{column}{.5\textwidth}
-            \begin{center}
-                \includegraphics[width=.9\textwidth]{mlp3.png}
-            \end{center}
+            \begin{onlyenv}<2>
+                \begin{center}
+                    \includegraphics[width=.9\textwidth]{nerfu-no-t.png}
+                \end{center}
+            \end{onlyenv}
+            \begin{onlyenv}<3->
+                \begin{center}
+                    \includegraphics[width=.9\textwidth]{nerfu-t.png}
+                \end{center}
+            \end{onlyenv}
         \end{column}
     \end{columns}
 \end{frame}
 
-\begin{frame}{Uncertainty field}
+\begin{frame}{Rendering}
     \begin{block}{NeRF-W volume rendering}
         \begin{equation*}
             \hat{\vb{C}}(\vb{r}) = \sum_{k = 1}^{K} T(t_k) ( \alpha (\sigma (t_k)\delta_k)  \vb{c}(t_k)  \alert<1>{+ (\sigma_i^{(\tau)} (t_k)\delta_k)  \vb{c}_i^{(\tau)}(t_k)})
         \end{equation*}
-    \end{block}\
-    \bigskip
-    But... 
-    \pause
-    \begin{itemize}
-        \item not all pixels are equally reliable
-        \begin{itemize}
-            \item learn a \emph{uncertainty field} \(\beta_i\)
-            \item adapt reconstruction loss to ignore unreliable pixels and 3D locations likely to contain occluders
-            %TODO don't forget this!
-            \item actual color is modeled as a normal distribution with \(\beta_i\) as variance
-            % rendered on transiente component as usual\(\hat{\beta}_i (\vb{r}) = \mathcal{R}(\vb{r}, \beta_i, \sigma_i^{(\tau)})\)
-        \end{itemize}
-    \end{itemize}
+    \end{block}
     \bigskip
     \pause
     \begin{figure}[H]
@@ -373,15 +376,36 @@
     \end{figure}
 \end{frame}
 
-\begin{frame}{NeRF-W full architecture}
+\begin{frame}{Uncertainty field}
+    But... 
+    \pause
+    \begin{itemize}
+        \item not all pixels are equally reliable
+        \begin{itemize}
+            \item learn a \emph{uncertainty field} \(\beta_i\)
+            \item adapt reconstruction loss to ignore unreliable pixels and 3D locations likely to contain occluders
+            \item actual color is modeled as a normal distribution with \(\beta_i\) as variance
+        \end{itemize}
+    \end{itemize}
+    \bigskip
+    \pause
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=.75\textwidth]{uncertainty.png}
+    \end{figure}
+    \bigskip
+    \pause
     \begin{equation*}
         \bigg[\sigma_i^{(\tau)} (t), \vb{c}_i^{(\tau)} (t), \tilde{\beta}_i (t)\bigg] = \textrm{MLP}_{\theta_3} \parenth[\bigg]{\vb{z}(t), \ell_i^{(\tau)}},
         \quad\quad 
         \beta_i (t) = \beta_{\textrm{min}} + \textrm{softplus}\parenth[\bigg]{\tilde{\beta}_i (t)}
     \end{equation*}
+\end{frame}
+
+\begin{frame}{NeRF-W full architecture}
     \begin{figure}[H]
         \centering
-        \includegraphics[width=.65\textwidth,keepaspectratio]{nerfw-architecture.png}
+        \includegraphics[width=.8\textwidth,keepaspectratio]{nerfw-architecture.png}
     \end{figure}
 \end{frame}
 
@@ -405,7 +429,7 @@
     \end{block}  
 \end{frame}
 
-\subsection{Results}
+\subsection{Results and ablation study}
 \begin{frame}{Results: interpolations}
     \begin{figure}[H]
         \animategraphics[loop,autoplay,width=.7\textwidth]{60}{assets/gifs/interpolations/interpol-}{0}{449}

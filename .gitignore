@@ -60,3 +60,10 @@ acs-*.bib
 # minted
 _minted*
 *.pyg
+
+# videos
+*.mp4
+*.webm
+
+# gifs
+gifs/
