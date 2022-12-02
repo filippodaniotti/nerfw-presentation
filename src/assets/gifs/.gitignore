@@ -1,5 +1,6 @@
 *
 !.gitignore
 # source videos
+!problem.mp4
 !geometry.webm
 !interpol.mp4

@@ -1,5 +1,7 @@
-"""
-Usage: python ./src/utils/extract_gifs.py problem.mp4 interpolations.mp4 geometry.mp4
+r"""
+Usage:
+unix: python3 ./src/utils/extract_gifs.py problem.mp4 interpol.mp4 geometry.webm mipnerf.mp4
+win: python .\src\utils\extract_gifs.py problem.mp4 interpol.mp4 geometry.webm mipnerf.mp4
 """
 
 import os
@@ -17,6 +19,7 @@ def ondir(path: str) -> None:
     yield dest
     os.chdir(cwd)
 
+
 def incremental_rename(prefix, ext):
 	cwd = os.getcwd()
 	files = os.listdir()
@@ -30,10 +33,7 @@ def main(video_path: str):
         if isdir(join(wd, video_name)):
             shutil.rmtree(video_name)
         os.mkdir(video_name)
-        print(join(wd, video_path))
-        print(join(wd, video_name, '%03d.png'))
-        print()
-        run (['ffmpeg', '-i', join(wd, video_path), join(wd, video_name, '%03d.png')])
+        run (['ffmpeg', '-i', video_path, join(video_name, '%03d.png')])
         with ondir(video_name):
             incremental_rename(f'{video_name}-', 'png')
 
