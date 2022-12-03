@@ -1,7 +1,7 @@
-"""
+r"""
 Usage:
-unix: python3 ./src/utils/extract_gifs.py problem.mp4 interpol.mp4 geometry.webm mipnerf.mp4
-win: python .\src\utils\extract_gifs.py problem.mp4 interpol.mp4 geometry.webm mipnerf.mp4
+unix: python3 ./src/utils/extract_gifs.py problem.mp4 interpol.mp4 geometry.webm mipnerf.mp4 waving-flag.gif
+win: python .\src\utils\extract_gifs.py problem.mp4 interpol.mp4 geometry.webm mipnerf.mp4 waving-flag.gif
 """
 
 import os

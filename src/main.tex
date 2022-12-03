@@ -1,6 +1,6 @@
 \documentclass[aspectratio=1610]{beamer}
 \usepackage{theme}
-\usepackage[utf8x]{inputenc}
+% \usepackage[utf8x]{inputenc}
 
 \usepackage[english]{babel}
 \usepackage{calligra}
@@ -64,6 +64,7 @@
 \section{Introduction}
 \begin{frame}{The problem: Novel view synthesis}
     We want to synthesize novel views of a scene from a sparse set of images  
+    \bigskip
     \begin{figure}[H]
         % \animategraphics[loop,autoplay,width=.8\textwidth]{20}{assets/gifs/problem/problem-}{0}{57}
     \end{figure}
@@ -407,7 +408,7 @@
 \subsection{Results and ablation study}
 \begin{frame}{Results: interpolations}
     \begin{figure}[H]
-        % \animategraphics[loop,autoplay,width=.7\textwidth]{60}{assets/gifs/interpolations/interpol-}{0}{449}
+        % \animategraphics[loop,autoplay,width=.7\textwidth]{60}{assets/gifs/interpol/interpol-}{0}{449}
     \end{figure}
 \end{frame}
 \begin{frame}{Results: consistent geometry}
@@ -461,7 +462,7 @@
             \item we can do better: we can meta-learn hyperparameters!\footnote{Baik et al. 2020, Meta-Learning with Adaptive Hyperparameters, \url{https://arxiv.org/abs/2011.00209v2}}
             \item we can extend to learn some NeRF-W-specific hyperparameters:
             \begin{itemize}
-                \item dimension \(n^(\tau)\) of \(\ell_i^(\tau)\)
+                \item dimension \(n^{(\tau)}\) of \(\ell_i^{(\tau)}\)
                 \item regularizer \(\lambda_u\)
             \end{itemize}
         \end{itemize}
@@ -515,19 +516,40 @@
 
 \subsection{Temporal latent embedding vector}
 \begin{frame}{Temporal latent embedding vector}
-    Can we extend NeRF-W to model simple dynamic scenes?\\
+    Extend NeRF-W to model simple dynamic scenes with GLO 
     \bigskip
-    Generative latent optimization may come in help once again
+    \begin{figure}
+        \animategraphics[loop,autoplay,width=.25\textwidth]{20}{assets/gifs/waving-flag/waving-flag-}{0}{57}
+    \end{figure}
     \begin{itemize}
-        \item pick a video, sample enough shots to describe the movement
+        \item pick a video, sample enough frames to describe the movement
         \item pick a time embedding vector \(\ell_i^{(\chi)}\) 
         \item make static density image dependent
-        \begin{equation*}
-            [\sigma_i(t), \vb{z}_i(t)] = \textrm{MLP}_{\theta_1} (\alert<2>{\gamma}_{\vb{x}}(\vb{x}), \alert{\ell_i^{(\chi)}})
-        \end{equation*}
         \item larger \(n^{(\chi)}\) accounts for more comples dynamic scenes 
-        \item (add architecture diagram)
     \end{itemize}
+    \bigskip
+    \begin{equation*}
+        [\sigma_i(t), \vb{z}_i(t)] = \textrm{MLP}_{\theta_1} (\gamma_{\vb{x}}(\vb{x}), \alert{\ell_i^{(\chi)}})
+    \end{equation*}    
+    % \begin{columns}
+    %     \begin{column}{.5\textwidth}
+    %         \begin{equation*}
+    %             [\sigma_i(t), \vb{z}_i(t)] = \textrm{MLP}_{\theta_1} (\gamma_{\vb{x}}(\vb{x}), \alert{\ell_i^{(\chi)}})
+    %         \end{equation*}    
+    %     \end{column}
+    %     \begin{column}{.5\textwidth}
+    %         \begin{figure}
+    %             \animategraphics[loop,autoplay,width=.4\textwidth]{20}{assets/gifs/waving-flag/waving-flag-}{0}{57}
+    %         \end{figure}
+    %     \end{column}
+    % \end{columns}
+\end{frame}
+
+\begin{frame}{NeRF-WT}
+    
+    \begin{figure}
+        \includegraphics[width=.7\textwidth]{nerfwt-architecture.png}
+    \end{figure}
 \end{frame}
 
 \subsection{Appearence ambiguity}
