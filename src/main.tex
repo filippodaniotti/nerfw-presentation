@@ -379,10 +379,36 @@
 \end{frame}
 
 \begin{frame}{NeRF-W full architecture}
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=.8\textwidth,keepaspectratio]{nerfw-architecture.png}
-    \end{figure}
+    \begin{onlyenv}<1>
+        \begin{figure}[H]
+            \includegraphics[width=.8\textwidth,keepaspectratio]{nerfw-architecture.png}
+        \end{figure}
+    \end{onlyenv}
+    \begin{onlyenv}<2>
+        \begin{columns}
+            \begin{column}{.7\textwidth}
+                \begin{figure}[H]
+                    \raggedleft
+                    \includegraphics[width=.9\textwidth,keepaspectratio]{nerfw-architecture.png}
+                \end{figure}
+            \end{column}
+            \begin{column}{.3\textwidth}
+                \begin{itemize}
+                    \item MLP\(_1\)
+                    \begin{itemize}
+                        \item 8 hidden layers
+                        \item 512 units each
+                    \end{itemize}
+                    \item MLP\(_2\) and MLP\(_3\)
+                    \begin{itemize}
+                        \item 4 hidden layers
+                        \item 128 units each
+                    \end{itemize}
+                \end{itemize}
+            \end{column}
+        \end{columns}
+
+    \end{onlyenv}
 \end{frame}
 
 \subsection{Optimizing NeRF-W}
@@ -519,7 +545,7 @@
     Extend NeRF-W to model simple dynamic scenes with GLO 
     \bigskip
     \begin{figure}
-        \animategraphics[loop,autoplay,width=.25\textwidth]{20}{assets/gifs/waving-flag/waving-flag-}{0}{57}
+        % \animategraphics[loop,autoplay,width=.25\textwidth]{20}{assets/gifs/waving-flag/waving-flag-}{0}{57}
     \end{figure}
     \begin{itemize}
         \item pick a video, sample enough frames to describe the movement
@@ -531,18 +557,6 @@
     \begin{equation*}
         [\sigma_i(t), \vb{z}_i(t)] = \textrm{MLP}_{\theta_1} (\gamma_{\vb{x}}(\vb{x}), \alert{\ell_i^{(\chi)}})
     \end{equation*}    
-    % \begin{columns}
-    %     \begin{column}{.5\textwidth}
-    %         \begin{equation*}
-    %             [\sigma_i(t), \vb{z}_i(t)] = \textrm{MLP}_{\theta_1} (\gamma_{\vb{x}}(\vb{x}), \alert{\ell_i^{(\chi)}})
-    %         \end{equation*}    
-    %     \end{column}
-    %     \begin{column}{.5\textwidth}
-    %         \begin{figure}
-    %             \animategraphics[loop,autoplay,width=.4\textwidth]{20}{assets/gifs/waving-flag/waving-flag-}{0}{57}
-    %         \end{figure}
-    %     \end{column}
-    % \end{columns}
 \end{frame}
 
 \begin{frame}{NeRF-WT}
