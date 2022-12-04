@@ -415,16 +415,16 @@
 \begin{frame}{Optimization}
     \begin{block}{Objective}
         \begin{itemize}
+            \item Coarse model only uses latent appearance modeling component
+            \begin{equation*}
+                \sum_{ij} L_i (\vb{r}_{ij}) + \frac{1}{2} || \vb{C} (\vb{r}_{ij}) - \hat{\vb{C}}_i^c (\vb{r}_{ij}) ||^2_2 
+            \end{equation*}
             \item Fine model: loss for ray \(\vb{r}\) in image \(i\) with true color \(\vb{C}(\vb{r})\)
             \begin{equation*}
                 L_i(\vb{r}) 
                 = \frac{|| \vb{C}_i (\vb{r}) - \hat{\vb{C}}_i (\vb{r}) ||_2^2}{2\beta_i (\vb{r})^2} 
                 + \frac{\log \beta_i (\vb{r})^2}{2} 
                 + \frac{\lambda_u}{K} \sum^K_{k=1}\sigma_i^{(\tau)} (t_k)
-            \end{equation*}
-            \item Coarse model: only uses latent appearance modeling component
-            \begin{equation*}
-                \sum_{ij} L_i (\vb{r}_{ij}) + \frac{1}{2} || \vb{C} (\vb{r}_{ij}) - \hat{\vb{C}}_i^c (\vb{r}_{ij}) ||^2_2 
             \end{equation*}
             \item hyperparameters: \(n_i^{(a)}\), \(n_i^{(\tau)}\), \(\beta_{\textrm{min}}\), \(\lambda_u\)
         \end{itemize}
@@ -499,9 +499,35 @@
                 \item occluders patters are often predictables
                 \item initialization does matter
             \end{itemize}
-            \pause
-            \item we can do better: we can meta-learn hyperparameters!\footnote{Baik et al. 2020, Meta-Learning with Adaptive Hyperparameters, \url{https://arxiv.org/abs/2011.00209v2}}
+            \bigskip
+            \begin{figure}
+                \includegraphics[width=.4\textwidth]{issues-transient.png}
+            \end{figure}
+            % \item we can do better: we can meta-learn hyperparameters!\footnote{Baik et al. 2020, Meta-Learning with Adaptive Hyperparameters, \url{https://arxiv.org/abs/2011.00209v2}}
         \end{itemize}
+\end{frame}
+
+\begin{frame}{Rweaking complexity: faster train}
+    \begin{itemize}
+        \item We can do better: we can meta-learn hyperparameters!\footnote{Baik et al. 2020, Meta-Learning with Adaptive Hyperparameters, \url{https://arxiv.org/abs/2011.00209v2}}
+        \item \begin{itemize}
+            \item ALFA tweaks MAML inner loop by adding a regularizer
+            \item learning rate and regularizer are generated per-step by a meta-learner \(g_\phi\)
+            \item meta-learner network is updated in outer loop
+        \end{itemize}
+        \bigskip
+        \begin{figure}
+            \centering
+            \includegraphics[width=.65\textwidth]{alfa.png}
+        \end{figure}
+        \pause
+        \item advantages:
+        \begin{itemize}
+            \item no second-order derivative computation
+            \item can be trained to adapt to any given initialization
+            \item works well in combination with MAML
+        \end{itemize}
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Tweaking complexity: faster inference}
