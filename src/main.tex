@@ -297,7 +297,7 @@
 
 \subsection{Transient component}
 \begin{frame}{Transient Head}
-    Transient phenomena alter image density
+    Transient phenomena alter both radiance and image density
     \bigskip
     \begin{center}
         \includegraphics[width=.5\textwidth]{issues-transient.png}
@@ -442,6 +442,16 @@
         % \animategraphics[loop,autoplay,width=.7\textwidth]{60}{assets/gifs/geometry/geometry-}{0}{209}
     \end{figure}
 \end{frame}
+\begin{frame}{Results}
+    \begin{center}
+        \includegraphics[width=\textwidth]{epipolar.png}
+    \end{center}
+    \bigskip
+    \pause
+    \begin{center}
+        \includegraphics[width=\textwidth]{table.png}
+    \end{center}
+\end{frame}
 \begin{frame}{Ablation study: Phototourism dataset}
     \begin{center}
         \includegraphics[width=.69\textwidth]{res-photo.png}
@@ -462,6 +472,7 @@
             \item disentangles static representation and transient representation
             \item even more impressive results!
         \end{itemize}
+        \bigskip
         \pause
         \item ... but still, it retains some NeRF limitations:
         \begin{itemize}
@@ -469,36 +480,36 @@
             \item slow inference time, order of minutes
             \item oblique and rarely seen parts of images get blurry renderings
         \end{itemize}
-        \pause
-        \item some more catches:
-        \begin{itemize}
-            \item the contribution of \(\vb{d}\) vs. \(\ell_i^{(a)}\) is unclear
-        \end{itemize}
     \end{itemize}
 \end{frame}
 
 \section{Our contribution}
+
 \subsection{Tweaking complexity}
 \begin{frame}{Tweaking complexity: faster train}
         \bold{Meta-learning}
         \begin{itemize}
             \item NeRF-W is a very dense network
             \item we can use meta-learning algorithms to learn better initialization
+            \pause
             \item MAML and Reptile algorithms can be easily integrated\footnote{Tancik et al. 2020, \emph{Learned Initializations for Optimizing Coordinate-Based Neural Representations}, \url{https://arxiv.org/abs/2012.02189}}
-            \item we can do better: we can meta-learn hyperparameters!\footnote{Baik et al. 2020, Meta-Learning with Adaptive Hyperparameters, \url{https://arxiv.org/abs/2011.00209v2}}
-            \item we can extend to learn some NeRF-W-specific hyperparameters:
+            \pause
+            \item consider \(\ell_i^{(\tau)}\)
             \begin{itemize}
-                \item dimension \(n^{(\tau)}\) of \(\ell_i^{(\tau)}\)
-                \item regularizer \(\lambda_u\)
+                \item occluders patters are often predictables
+                \item initialization does matter
             \end{itemize}
+            \pause
+            \item we can do better: we can meta-learn hyperparameters!\footnote{Baik et al. 2020, Meta-Learning with Adaptive Hyperparameters, \url{https://arxiv.org/abs/2011.00209v2}}
         \end{itemize}
 \end{frame}
 
 \begin{frame}{Tweaking complexity: faster inference}
-    \bold{Network trimming}\footnote{Hu et al. 2016, \emph{Network Trimming: A Data-Driven Neuron Pruning Approach towards Efficient Deep Architectures},  \url{https://arxiv.org/abs/1607.03250v1}}:
+    \bold{Network trimming}\footnote{Hu et al. 2016, \emph{Network Trimming: A Data-Driven Neuron Pruning Approach towards Efficient Deep Architectures},  \url{https://arxiv.org/abs/1607.03250v1}}
     \begin{itemize}
         \item APoZ: percentage of zero activations after ReLU
-        \item empirical result: many (631) in VGG-16 have APoz \(>\) 90\%
+        \pause
+        \item empirical result: many (631) in VGG-16 have APoZ \(>\) 90\%
         \bigskip
         \begin{figure}
             \includegraphics[width=.4\textwidth]{apoz.png}
@@ -508,16 +519,18 @@
 
 \begin{frame}{Tweaking complexity: faster inference}
     \begin{itemize}
-        \item High APoz means that nodes provide little contribution to the output
+        \item High APoZ means that nodes provide little contribution to the output
         \begin{itemize}
             \item they can be pruned without affecting the result
             \item accuracy was even higher in some experiments!
         \end{itemize}
         \bigskip
+        \pause
         \begin{figure}
-            \includegraphics[width=.7\textwidth]{retrain.png}
+            \includegraphics[width=.75\textwidth]{retrain.png}
         \end{figure}
         \bigskip
+        \pause
         \item NeRF-W is a dense model
         \begin{itemize}
             \item fair to assume that there is redundancy
@@ -544,14 +557,16 @@
 \begin{frame}{Temporal latent embedding vector}
     Extend NeRF-W to model simple dynamic scenes with GLO 
     \bigskip
+    \pause
     \begin{figure}
-        % \animategraphics[loop,autoplay,width=.25\textwidth]{20}{assets/gifs/waving-flag/waving-flag-}{0}{57}
+        % \animategraphics[loop,autoplay,width=.35\textwidth]{20}{assets/gifs/waving-flag/waving-flag-}{0}{57}
     \end{figure}
+    \pause
     \begin{itemize}
-        \item pick a video, sample enough frames to describe the movement
+        \item pick a video, sample enough frames to describe the motion
         \item pick a time embedding vector \(\ell_i^{(\chi)}\) 
         \item make static density image dependent
-        \item larger \(n^{(\chi)}\) accounts for more comples dynamic scenes 
+        \item larger \(n^{(\chi)}\) accounts for more complex dynamic scenes 
     \end{itemize}
     \bigskip
     \begin{equation*}
@@ -559,28 +574,36 @@
     \end{equation*}    
 \end{frame}
 
-\begin{frame}{NeRF-WT}
-    
-    \begin{figure}
-        \includegraphics[width=.7\textwidth]{nerfwt-architecture.png}
-    \end{figure}
+\begin{frame}{Proposal: NeRF-WT}
+    \begin{onlyenv}<1>
+        \begin{figure}
+            \includegraphics[width=.7\textwidth]{nerfwt-architecture.png}
+        \end{figure}
+    \end{onlyenv}
+    \begin{onlyenv}<2>
+        \begin{figure}
+            \includegraphics[width=.4\textwidth]{nerfwt-architecture.png}
+        \end{figure}
+        Some catches:
+        \begin{itemize}
+            \item consistency of static geometry
+            \begin{itemize}
+                \item use \(\ell_i^{(\chi)}\) only on fine models
+                \item assumption: motion is simple enough and reasonably local
+            \end{itemize}
+            \item ambiguity on \(\ell_i^{(\chi)}\) and \(\ell_i^{(\tau)}\)
+            \begin{itemize}
+                \item "it may be not that bad of an issue"
+            \end{itemize}
+        \end{itemize}
+    \end{onlyenv}
 \end{frame}
 
-\subsection{Appearence ambiguity}
-\begin{frame}{Appearence ambiguity}
-    It is unclear how NeRF-W learns appearence
-    \bigskip
-    \begin{itemize}
-        \item do we still need the color to be independent from the radiance?
-        \item get rid of redundant components
-        \item simplify and merge MLP\(_1\) and MLP\(_2\)
-    \end{itemize}
-    \bigskip
-    \begin{exampleblock}{Jon Barron itself says}
-        \begin{quote}
-            That's definitely an issue, although it seems to be not that bad of an issue
-          \end{quote}
-    \end{exampleblock}
+\begin{frame}{Quick reminder}
+    2021 was decades ago!
+    \begin{figure}
+        % \animategraphics[loop,autoplay,width=.61\textwidth]{60}{assets/gifs/block-nerf/block-nerf-}{0}{199}
+    \end{figure}
 \end{frame}
 
 \begin{frame}[plain,noframenumbering]
