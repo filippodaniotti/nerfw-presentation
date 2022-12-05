@@ -33,7 +33,7 @@
 \title[NeRF-W]{\textsc{NeRF in the Wild}}
 \subtitle{Neural Radiance Fields for Unconstrained Photo Collections}
 \institute[DISI - UniTN]{Department of Information Engineering\\and Computer Science}
-\date{\today}
+\date{December 5, 2022}
 
 
 \AtBeginSection[]
@@ -66,7 +66,7 @@
     We want to synthesize novel views of a scene from a sparse set of images  
     \bigskip
     \begin{figure}[H]
-        % \animategraphics[loop,autoplay,width=.8\textwidth]{20}{assets/gifs/problem/problem-}{0}{57}
+        \animategraphics[loop,autoplay,width=.8\textwidth]{20}{assets/gifs/problem/problem-}{0}{57}
     \end{figure}
 \end{frame}
 
@@ -434,12 +434,12 @@
 \subsection{Results and ablation study}
 \begin{frame}{Results: interpolations}
     \begin{figure}[H]
-        % \animategraphics[loop,autoplay,width=.7\textwidth]{60}{assets/gifs/interpol/interpol-}{0}{449}
+        \animategraphics[loop,autoplay,width=.7\textwidth]{60}{assets/gifs/interpol/interpol-}{0}{449}
     \end{figure}
 \end{frame}
 \begin{frame}{Results: consistent geometry}
     \begin{figure}[H]
-        % \animategraphics[loop,autoplay,width=.7\textwidth]{60}{assets/gifs/geometry/geometry-}{0}{209}
+        \animategraphics[loop,autoplay,width=.7\textwidth]{60}{assets/gifs/geometry/geometry-}{0}{209}
     \end{figure}
 \end{frame}
 \begin{frame}{Results}
@@ -507,10 +507,10 @@
         \end{itemize}
 \end{frame}
 
-\begin{frame}{Rweaking complexity: faster train}
+\begin{frame}{Tweaking complexity: faster train}
     \begin{itemize}
         \item We can do better: we can meta-learn hyperparameters!\footnote{Baik et al. 2020, Meta-Learning with Adaptive Hyperparameters, \url{https://arxiv.org/abs/2011.00209v2}}
-        \item \begin{itemize}
+        \begin{itemize}
             \item ALFA tweaks MAML inner loop by adding a regularizer
             \item learning rate and regularizer are generated per-step by a meta-learner \(g_\phi\)
             \item meta-learner network is updated in outer loop
@@ -583,9 +583,8 @@
 \begin{frame}{Temporal latent embedding vector}
     Extend NeRF-W to model simple dynamic scenes with GLO 
     \bigskip
-    \pause
     \begin{figure}
-        % \animategraphics[loop,autoplay,width=.35\textwidth]{20}{assets/gifs/waving-flag/waving-flag-}{0}{57}
+        \animategraphics[loop,autoplay,width=.35\textwidth]{20}{assets/gifs/waving-flag/waving-flag-}{0}{57}
     \end{figure}
     \pause
     \begin{itemize}
@@ -628,7 +627,7 @@
 \begin{frame}{Quick reminder}
     2021 was decades ago!
     \begin{figure}
-        % \animategraphics[loop,autoplay,width=.61\textwidth]{60}{assets/gifs/block-nerf/block-nerf-}{0}{199}
+        \animategraphics[loop,autoplay,width=.61\textwidth]{60}{assets/gifs/block-nerf/block-nerf-}{0}{199}
     \end{figure}
 \end{frame}
 
